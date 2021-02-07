@@ -30,6 +30,5 @@ public class Look : MonoBehaviour
 
         body.Rotate(Vector3.up * lookX);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
     }
 }

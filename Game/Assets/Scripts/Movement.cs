@@ -22,9 +22,9 @@ public class Movement : MonoBehaviour
     private float groundDistance = 0.4f;
 
     [Header("Parkour")]
-    [SerializeField] private bool isWallRunning = false;
-    [SerializeField] private bool isWallRunningLeft = false;
-    [SerializeField] private bool isWallRunningRight = false;
+    public bool isWallRunning = false;
+    public bool isWallRunningLeft = false;
+    public bool isWallRunningRight = false;
     private float noWallRunAngle = 0f;
     private float rightWallRunAngle = 22.5f;
     private float leftWallRunAngle = -22.5f;
@@ -34,9 +34,11 @@ public class Movement : MonoBehaviour
     [SerializeField] private bool startedResetTilt;
     [SerializeField] private bool doLerp = false;
     private float heightOfContact = 0f;
-    private Vector3 wallRunDirection; 
-    
-    
+    public Vector3 wallRunDirection;
+    [SerializeField] private GameObject WallRunBoxLeft;
+    [SerializeField] private GameObject WallRunBoxRight;
+
+
     private enum WallRun
     {
         None, Left, Right
@@ -60,100 +62,37 @@ public class Movement : MonoBehaviour
         //the local right times the x input, the local forward times the z input
 
         Vector3 move;
-        if (isWallRunning)
-        {
-            move = wallRunDirection;
-        }
-        else
+        //if (isWallRunning)
+        //{
+        //    move = wallRunDirection;
+        //}
+        //else
             move = transform.right * x + transform.forward * z;
 
-        if (isGrounded) 
+        //if (isGrounded) 
             Move(move, runSpeed); //grounded
-        else if (isWallRunning) 
-            Move(move, wallRunSpeed); //wall running
-        else 
-            Move(move, airSpeed); //in air
+        //else if (isWallRunning) 
+            //Move(move, wallRunSpeed); //wall running
+        //else 
+           // Move(move, airSpeed); //in air
 
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
         }
         velocity.y += gravity * Time.deltaTime;
-        if(isWallRunning)
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(heightOfContact+=(velocity.y*Time.deltaTime), -10000, heightOfContact + 0.5f), transform.position.z);
-        else
+        //if(isWallRunning)
+            //transform.position = new Vector3(transform.position.x, Mathf.Clamp(heightOfContact+=(velocity.y*Time.deltaTime), -10000, heightOfContact + 0.5f), transform.position.z);
+       // else
             controller.Move(velocity * Time.deltaTime);
 
         ///////////////////////////////////Parkour//////////////////////////////////////////
-        RaycastHit hit;
-
-        //right
-        if (Physics.SphereCast(transform.position, 0.2f, transform.right, out hit, 0.75f, ground, QueryTriggerInteraction.Ignore)) 
+        
+        if(isWallRunningRight)
         {
-            startedResetTilt = false;
-            if (!isWallRunningRight)
-            {
-                heightOfContact = hit.point.y;
-                isWallRunningRight = true;
-                timeStartedWallRunning = Time.time;
-                doLerp = true;
-                lastWallRun = WallRun.Right;
-                velocity.y = 0;
-            }
-         
-            /*if we still need to change our angle to match the wall we are on subtract the time now since when we started, 
-             * so if start at in at second 10:00ms and its 10:50ms 10:50 - 10:00 = 0.5 which is 50%. So it would also lerp in one second like that.
-             * percentOfLerpDone says how long we want it to take, so if we want to to take 2 seconds we divide that 50% by 2 */
-            if (doLerp)
-            {
-                if (DoTiltLerp(timeStartedWallRunning, transform.rotation.eulerAngles.z,rightWallRunAngle) >= 1)
-                    doLerp = false;
-            }
-            //Debug.DrawLine(transform.position, hit.point, Color.red, 1f);
+            StartCoroutine(ChangeTilt(true));
         }
 
-        //left
-        else if (Physics.Raycast(transform.position, -transform.right, out hit, 1f, ground, QueryTriggerInteraction.Ignore))
-        {
-            startedResetTilt = false;
-        }
-
-        //flat
-        else
-        {
-            if (transform.rotation.eulerAngles.z != 0f)
-            {              
-                //lerp back to zero z
-                if (!startedResetTilt)
-                {
-                    timeStartedWallRunning = Time.time;
-                    doLerp = true;
-                    isWallRunningRight = false;
-                    isWallRunningLeft = false;
-                    lastWallRun = WallRun.None;
-                    startedResetTilt = true;
-                }
-                if(doLerp)
-                {
-                    if (DoTiltLerp(timeStartedWallRunning, transform.rotation.eulerAngles.z, noWallRunAngle) >= 1)
-                    {
-                        doLerp = false;
-                        startedResetTilt = true;
-                        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, noWallRunAngle);
-                    }
-                }
-                /*
-                transform.rotation = Quaternion.Euler(Vector3.Lerp(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z),
-                    new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, noWallRunAngle), 5f * Time.deltaTime));*/
-
-            }
-            else
-            {
-                startedResetTilt = false;
-            }
-        }
-
-        isWallRunning = isWallRunningLeft || isWallRunningRight ? true : false;
     }
 
     private void Move(Vector3 move, float speed)
@@ -174,6 +113,27 @@ public class Movement : MonoBehaviour
     {
         Debug.DrawRay(hit.point, hit.normal, Color.green, 5f);
         Debug.DrawRay(hit.point, -Vector3.Cross(hit.normal.normalized, Vector3.up), Color.white, 5f);
-        wallRunDirection = -Vector3.Cross(hit.normal.normalized, Vector3.up);
+        //wallRunDirection = -Vector3.Cross(hit.normal.normalized, Vector3.up);
+    }
+
+    public IEnumerator ChangeTilt(bool isRightSide)
+    {
+        if(isRightSide)
+        {
+            float timeStartedTilt = Time.time;
+            float startAngle = transform.rotation.eulerAngles.z;
+            float percentOfLerpDone = 0;
+            print(percentOfLerpDone);
+            while (percentOfLerpDone < 1)
+            {
+                percentOfLerpDone = DoTiltLerp(timeStartedTilt, startAngle, rightWallRunAngle);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        else
+        {
+
+        }
+        yield return null;
     }
 }
