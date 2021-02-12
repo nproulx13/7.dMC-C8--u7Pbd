@@ -15,7 +15,7 @@ public class WallRunBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "WallRun");
+        if (other.CompareTag("WallRun")) ;
         {
             if (isRightBox)
             {
@@ -37,7 +37,7 @@ public class WallRunBox : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "WallRun")
+        if (other.CompareTag("WallRun"))
         {
             player.isWallRunning = false;
             player.isWallRunningLeft = false;
