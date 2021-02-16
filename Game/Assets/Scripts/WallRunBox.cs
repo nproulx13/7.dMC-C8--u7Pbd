@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class WallRunBox : MonoBehaviour
 {
-    private Movement player;
+    private PlayerMovementRigidbody player;
     public bool isRightBox;
     public bool isLeftBox;
 
     private void Start()
     {
-        player = GetComponentInParent<Movement>();
+        player = GetComponentInParent<PlayerMovementRigidbody>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
+        if(player.isGrounded)
+        {
+            return;
+        }
         if (other.CompareTag("WallRun")) ;
         {
             if (isRightBox)
@@ -22,7 +26,7 @@ public class WallRunBox : MonoBehaviour
                 player.isWallRunning = true;
                 player.isWallRunningRight = true;
                 player.isWallRunningLeft = false;
-                Debug.DrawRay(transform.position, (other.transform.position - transform.position), Color.red, 10f);
+                //Debug.DrawRay(transform.position, (other.transform.position - transform.position), Color.red, 10f);
                 //player.wallRunDirection = -Vector3.Cross(other., Vector3.up);
             }
 
