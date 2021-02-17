@@ -31,6 +31,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
     public bool justJumpedOffWall = false;
     private WallJumpBox wallJumpBox;
     public string lastWallRunDirection;
+    [SerializeField] private Animator headCamera;
 
     private float dashDurationSeconds = 1f;
     void Awake()
@@ -41,7 +42,20 @@ public class PlayerMovementRigidbody : MonoBehaviour
     
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, ground);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, ground);
+        if(isWallRunningRight)
+        {
+            headCamera.SetBool("Right", true);
+        }
+        else if (isWallRunningLeft)
+        {
+            headCamera.SetBool("Left", true);
+        }
+        else
+        {
+            headCamera.SetBool("Right", false);
+            headCamera.SetBool("Left", false);
+        }
     }
 
     private void FixedUpdate()
