@@ -19,7 +19,7 @@ public class WallRunBox : MonoBehaviour
         {
             return;
         }
-        if (other.CompareTag("WallRun")) ;
+        else if (other.CompareTag("WallRun") && other.gameObject!=player.lastWall)
         {
             if (isRightBox)
             {
@@ -36,6 +36,7 @@ public class WallRunBox : MonoBehaviour
                 player.isWallRunningLeft = true;
                 player.isWallRunningRight = false;
             }
+            player.lastWall = other.gameObject;
         }
     }
 

@@ -14,7 +14,7 @@ public class Look : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void LateUpdate()
     {
         //cursor locking
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -23,9 +23,9 @@ public class Look : MonoBehaviour
         }
 
         float lookX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        float lookY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+        float lookVertical = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 
-        xRotation -= lookY;
+        xRotation -= lookVertical;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         body.Rotate(Vector3.up * lookX);

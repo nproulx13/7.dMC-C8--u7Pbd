@@ -16,22 +16,27 @@ public class PlayerMovementRigidbody : MonoBehaviour
     private float groundDistance = 0.4f;
     public LayerMask ground;
     public Rigidbody rbody;
-    private float jumpForce = 1000f;
-    public float dashForce = 100f;
+    private float jumpForce = 1200f;
+    private float slideForce = 75f;
+    private float dashForce = 37.5f;
+    private bool canDash = true;
+    Vector3 move;
 
     [Header("Parkour")]
+    public GameObject lastWall;
     public bool isWallRunning;
     public bool isWallRunningRight;
     public bool isWallRunningLeft;
-    private float wallRunUpForce = 10f;
+    private float wallRunUpForce = 8.5f;
     private float currentWallRunUpForce = 0f;
     private float wallRunDecreaseRate = 25f;
-    private float jumpOffWallUpForce = 2f;
-    private float jumpOffWallForwardForce = 40f;
+    private float jumpOffWallUpForce = 7.5f;
+    private float jumpOffWallForwardForce = 18.5f;
     public bool justJumpedOffWall = false;
     private WallJumpBox wallJumpBox;
     public string lastWallRunDirection;
     [SerializeField] private Animator headCamera;
+    [SerializeField] private CapsuleCollider capsuleCollider; 
 
     private float dashDurationSeconds = 1f;
     void Awake()
@@ -56,6 +61,53 @@ public class PlayerMovementRigidbody : MonoBehaviour
             headCamera.SetBool("Right", false);
             headCamera.SetBool("Left", false);
         }
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rbody.AddForce(0, jumpForce, 0, ForceMode.Impulse);
+        }
+
+        if (wallJumpBox.canWallJump && !isGrounded)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                if (lastWallRunDirection == "right")
+                    rbody.velocity = -transform.right * 0.75f * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce * 1.25f + transform.up * jumpOffWallUpForce * 3f; //+ transform.up * jumpOffWallUpForce;
+                else if (lastWallRunDirection == "left")
+                    rbody.velocity = transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce + transform.up * jumpOffWallUpForce; //+ transform.up * jumpOffWallUpForce;
+                StartCoroutine(ChangeCanDoInput());
+                justJumpedOffWall = true;
+                ResetWallRun();
+            }
+        }
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            capsuleCollider.height = 0.5f;
+            capsuleCollider.center = new Vector3(0, 0.25f, 0);
+            rbody.velocity = (transform.forward.normalized * slideForce / 2) + -transform.up * 5f;
+            StartCoroutine(Sliding());
+        }
+
+        if(Input.GetKeyDown(KeyCode.Q) && canDash)
+        {
+            rbody.velocity = -transform.right.normalized * dashForce + transform.forward.normalized * 2 + move;
+            StartCoroutine(Dashing());
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) && canDash)
+        {
+            rbody.velocity = transform.right.normalized * dashForce + transform.forward.normalized * 2 + move;
+            StartCoroutine(Dashing());
+        }
+
+        if (isGrounded)
+        {
+            lastWall = null;
+            justJumpedOffWall = false;
+            ResetWallRun();
+        }
+
     }
 
     private void FixedUpdate()
@@ -63,23 +115,18 @@ public class PlayerMovementRigidbody : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
         float resultSpeedBasedOnDirection = ProcessMovment(x,z);
-        Vector3 move = (transform.right * x + transform.forward * z).normalized;
+        move = (transform.right * x + transform.forward * z).normalized;
 
-        if (canDoInput)
+        if (canDoInput && canDash)
         {
-            if (Input.GetButtonDown("Jump") && isGrounded)
-            {
-                rbody.AddForce(0, jumpForce, 0, ForceMode.Impulse);
-            }
-
             if (isGrounded && !isWallRunning)
             {
-                rbody.velocity = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.deltaTime * 100f * resultSpeedBasedOnDirection);
+                rbody.velocity = new Vector3(move.x * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
             }
 
             if (!isGrounded)
             {
-                rbody.velocity = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.deltaTime * 100f * resultSpeedBasedOnDirection);
+                rbody.velocity = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
             }
 
             if (!isWallRunning)
@@ -88,31 +135,18 @@ public class PlayerMovementRigidbody : MonoBehaviour
             }
             if (isWallRunning)
             {
-                rbody.velocity = new Vector3(rbody.velocity.x * 2, currentWallRunUpForce, rbody.velocity.z * 2);
-                currentWallRunUpForce -= wallRunDecreaseRate * Time.deltaTime;
-                if (isWallRunningRight) lastWallRunDirection = "right";
-                else lastWallRunDirection = "left";
-            }
-
-            if(wallJumpBox.canWallJump && !isGrounded)
-            {
-                if (Input.GetButtonDown("Jump"))
+                if (isWallRunningRight)
                 {
-                    if (lastWallRunDirection == "right")
-                        rbody.velocity = -transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce + transform.up * jumpOffWallUpForce; //+ transform.up * jumpOffWallUpForce;
-                    else if(lastWallRunDirection == "left")
-                        rbody.velocity = transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce + transform.up * jumpOffWallUpForce; //+ transform.up * jumpOffWallUpForce;
-                    StartCoroutine(ChangeCanDoInput());
-                    justJumpedOffWall = true;
-                    ResetWallRun();
+                    rbody.velocity = new Vector3(rbody.velocity.x * 1.25f, currentWallRunUpForce, rbody.velocity.z * 1.25f) + transform.right.normalized * 2;
+                    lastWallRunDirection = "right";
                 }
+                else
+                {
+                    rbody.velocity = new Vector3(rbody.velocity.x * 1.25f, currentWallRunUpForce, rbody.velocity.z * 1.25f) + -transform.right.normalized * 2;
+                    lastWallRunDirection = "left";
+                }
+                currentWallRunUpForce -= wallRunDecreaseRate * Time.fixedDeltaTime;
             }
-        }
-
-        if(isGrounded)
-        {
-            justJumpedOffWall = false;
-            ResetWallRun();
         }
     }
 
@@ -140,7 +174,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
             targetSpeed = forwardSpeed;
         }
 
-        targetSpeed = isWallRunning ? targetSpeed * 1.2f : justJumpedOffWall ? targetSpeed * 1.5f : !isGrounded ? targetSpeed * 0.6f : targetSpeed;
+        targetSpeed = isWallRunning ? targetSpeed * 1.3f : justJumpedOffWall ? targetSpeed * 2f : !isGrounded ? targetSpeed * 0.9f : targetSpeed;
         return targetSpeed;
     }
     IEnumerator ChangeCanDoInput()
@@ -149,6 +183,22 @@ public class PlayerMovementRigidbody : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         canDoInput = true;
         justJumpedOffWall = false;
+    }
+
+    IEnumerator Sliding()
+    {
+        canDoInput = false;
+        yield return new WaitForSeconds(0.5f);
+        canDoInput = true;
+        capsuleCollider.height = 2f;
+        capsuleCollider.center = new Vector3(0, 0, 0);
+    }
+
+    IEnumerator Dashing()
+    {
+        canDash = false;
+        yield return new WaitForSeconds(0.2f);
+        canDash = true;
     }
 }
 

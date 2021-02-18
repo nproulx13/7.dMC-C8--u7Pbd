@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class WallJumpBox : MonoBehaviour
 {
+    public PlayerMovementRigidbody player;
     public bool canWallJump = false;
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("WallRun"))
+        if (other.CompareTag("WallRun") && other.gameObject != player.lastWall)
         {
             canWallJump = true;
         }
