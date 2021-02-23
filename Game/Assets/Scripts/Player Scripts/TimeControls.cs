@@ -9,19 +9,19 @@ public class TimeControls : MonoBehaviour
     {
         if (Input.GetButtonDown("Time1"))
         {
-            TimeCore.shift(0);
+            TimeCore.Shift(0);
         }
         else if(Input.GetButtonDown("Time2"))
         {
-            TimeCore.shift(1);
+            TimeCore.Shift(1);
         }
         else if (Input.GetButtonDown("Time3"))
         {
-            TimeCore.shift(2);
+            TimeCore.Shift(2);
         }
         else if (Input.GetButtonDown("Time4"))
         {
-            TimeCore.shift(3);
+            TimeCore.Shift(3);
         }
     }
 }

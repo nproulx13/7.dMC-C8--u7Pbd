@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Look : MonoBehaviour
 {
-    private float sensitivity = 50f;
+    public float sensitivity = 90f;
     [SerializeField] private Transform body;
     private float xRotation = 0f;
     private void Start()
