@@ -8,7 +8,7 @@ public class WallJumpBox : MonoBehaviour
     public bool canWallJump = false;
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("WallRun") && other.gameObject != player.lastWall)
+        if (other.CompareTag("WallRun") && (other.gameObject != player.lastWall || (other.gameObject == player.lastWall && (player.lastNormalVector1 != player.lastNormalVector2))))
         {
             canWallJump = true;
         }
