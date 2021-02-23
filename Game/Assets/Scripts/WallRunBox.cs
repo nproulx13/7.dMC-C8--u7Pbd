@@ -19,7 +19,7 @@ public class WallRunBox : MonoBehaviour
         {
             return;
         }
-        else if (other.CompareTag("WallRun") && other.gameObject!=player.lastWall)
+        else if (other.CompareTag("WallRun") && (other.gameObject!=player.lastWall || (other.gameObject == player.lastWall && (player.lastNormalVector1 != player.lastNormalVector2))))
         {
             if (isRightBox)
             {
@@ -49,4 +49,36 @@ public class WallRunBox : MonoBehaviour
             player.isWallRunningRight = false;
         }
     }
+
+    /*
+    private void OnTriggerEnter(Collider other)
+    {
+        if (player.isGrounded)
+        {
+            return;
+        }
+
+        if (other.CompareTag("WallRun"))
+        {
+            Ray ray = isLeftBox ? new Ray(transform.position,-transform.right) : new Ray(transform.position, -transform.right);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Vector3 point = hit.point;
+                Vector3 rayBackToBox = point - transform.position;
+                Debug.Log(rayBackToBox);
+                if (player.oneOrTwoSwitchForNormalVectors == 1)
+                {
+                    player.lastNormalVector1 = rayBackToBox;
+                    player.oneOrTwoSwitchForNormalVectors = 2;
+                }
+                else
+                {
+                    player.lastNormalVector1 = rayBackToBox;
+                    player.oneOrTwoSwitchForNormalVectors = 1;
+                }
+            }
+           
+        }
+    }*/
 }

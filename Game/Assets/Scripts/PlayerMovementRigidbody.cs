@@ -24,6 +24,9 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
     [Header("Parkour")]
     public GameObject lastWall;
+    public Vector3 lastNormalVector1;
+    public Vector3 lastNormalVector2;
+    public int oneOrTwoSwitchForNormalVectors = 1;
     public bool isWallRunning;
     public bool isWallRunningRight;
     public bool isWallRunningLeft;
@@ -74,7 +77,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
                 if (lastWallRunDirection == "right")
                     rbody.velocity = -transform.right * 0.75f * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce * 1.25f + transform.up * jumpOffWallUpForce * 3f; //+ transform.up * jumpOffWallUpForce;
                 else if (lastWallRunDirection == "left")
-                    rbody.velocity = transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce + transform.up * jumpOffWallUpForce; //+ transform.up * jumpOffWallUpForce;
+                    rbody.velocity = transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce * 1.25f + transform.up * jumpOffWallUpForce * 3f; //+ transform.up * jumpOffWallUpForce;
                 StartCoroutine(ChangeCanDoInput());
                 justJumpedOffWall = true;
                 ResetWallRun();
@@ -116,6 +119,11 @@ public class PlayerMovementRigidbody : MonoBehaviour
         float z = Input.GetAxisRaw("Vertical");
         float resultSpeedBasedOnDirection = ProcessMovment(x,z);
         move = (transform.right * x + transform.forward * z).normalized;
+
+        if ((z != 0 || x != 0) && isGrounded) 
+            headCamera.SetBool("Running", true);
+        else 
+            headCamera.SetBool("Running", false);
 
         if (canDoInput && canDash)
         {
@@ -199,6 +207,26 @@ public class PlayerMovementRigidbody : MonoBehaviour
         canDash = false;
         yield return new WaitForSeconds(0.2f);
         canDash = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("WallRun"))
+        {
+            ContactPoint[] contacts = collision.contacts;
+            Vector3 normal = contacts[0].normal;
+            Debug.DrawRay(contacts[0].point, normal, Color.cyan, 5f);
+            if (oneOrTwoSwitchForNormalVectors == 1)
+            {
+                lastNormalVector1 = normal;
+                oneOrTwoSwitchForNormalVectors = 2;
+            }
+            else
+            {
+                lastNormalVector2 = normal;
+                oneOrTwoSwitchForNormalVectors = 1;
+            }
+        }
     }
 }
 
