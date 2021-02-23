@@ -22,6 +22,8 @@ public class MoverController : Controller
     {
         counter += localTime * Time.deltaTime;
         counter %= 180;
-        GetComponent<Rigidbody>().velocity = new Vector3(localTime * Mathf.Sin(counter) * 8, 0, 0);
+        //GetComponent<Rigidbody>().velocity = new Vector3(localTime * Mathf.Sin(counter) * 8, 0, 0);
+        float f = (localTime * Mathf.Abs(Mathf.Sin(counter)) * .4f) + 1f;
+        transform.localScale = new Vector3(f,f,f);
     }
 }

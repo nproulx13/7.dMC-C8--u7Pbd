@@ -28,6 +28,12 @@ public class Shiftable : MonoBehaviour
             {
                 GetComponent<Controller>().setTime(localTime);
             } catch { }
+            //attempt to freeze Particles
+            try
+            {
+                ParticleSystem p = GetComponent<ParticleSystem>();
+            }
+            catch { }
         }
     }
 }
