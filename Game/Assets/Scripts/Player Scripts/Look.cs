@@ -6,6 +6,7 @@ public class Look : MonoBehaviour
 {
     public float sensitivity = 90f;
     [SerializeField] private Transform body;
+    [SerializeField] private PlayerMovementRigidbody player;
     private float xRotation = 0f;
     private void Start()
     {
@@ -29,6 +30,7 @@ public class Look : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         body.Rotate(Vector3.up * lookX);
+
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 }

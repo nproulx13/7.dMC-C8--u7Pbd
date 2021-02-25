@@ -13,6 +13,11 @@ public class GroundCheck : MonoBehaviour
         {
             player.isGrounded = true;
         }
+
+        if (other.gameObject.CompareTag("WallRun"))
+        {
+            player.isGrounded = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)

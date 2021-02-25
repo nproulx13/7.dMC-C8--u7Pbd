@@ -15,19 +15,30 @@ public class WallRunBox : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(player.isGrounded)
+        if (player.isGrounded)
         {
+            player.getNextWall = true;
             return;
         }
-        else if (other.CompareTag("WallRun") && (other.gameObject!=player.lastWall || (other.gameObject == player.lastWall && (player.lastNormalVector1 != player.lastNormalVector2))))
+
+        if (player.getNextWall && other.CompareTag("WallRun"))
+        {
+            //GetNormals();
+            player.SetLastWalls(other.gameObject);
+            player.getNextWall = false;
+            player.rigRotation = transform.rotation;
+            player.wallRunVelocity = player.GetVelocity();
+
+        }
+
+        if (other.CompareTag("WallRun") && !player.isGrounded && ((player.lastWall1 != player.lastWall2)))
+            //|| ((player.lastWall1 == player.lastWall2) && (Vector3.Angle(player.lastNormalVector1, player.lastNormalVector2) > 90))))
         {
             if (isRightBox)
             {
                 player.isWallRunning = true;
                 player.isWallRunningRight = true;
                 player.isWallRunningLeft = false;
-                //Debug.DrawRay(transform.position, (other.transform.position - transform.position), Color.red, 10f);
-                //player.wallRunDirection = -Vector3.Cross(other., Vector3.up);
             }
 
             else if (isLeftBox)
@@ -36,7 +47,6 @@ public class WallRunBox : MonoBehaviour
                 player.isWallRunningLeft = true;
                 player.isWallRunningRight = false;
             }
-            player.lastWall = other.gameObject;
         }
     }
 
@@ -47,38 +57,33 @@ public class WallRunBox : MonoBehaviour
             player.isWallRunning = false;
             player.isWallRunningLeft = false;
             player.isWallRunningRight = false;
+            player.rigRotation = player.transform.rotation;
+            player.getNextWall = true;
         }
     }
 
     /*
-    private void OnTriggerEnter(Collider other)
+    public void GetNormals()
     {
-        if (player.isGrounded)
+        
+        LayerMask playerLayer = 1 << 8;
+        playerLayer = ~playerLayer;
+        Ray ray;
+        RaycastHit hit;
+        if (isLeftBox)
+            ray = new Ray(transform.position, -transform.right);
+        else
+            ray = new Ray(transform.position, transform.right);
+        if(Physics.Raycast(ray,out hit, 2f, playerLayer))
         {
-            return;
-        }
+            player.lastNormalVector = hit.normal;
+            player.SetLastWalls(hit.transform.gameObject);
+            player.getNextWall = false;
+            Debug.DrawRay(transform.position, hit.normal, Color.cyan, 5f);
 
-        if (other.CompareTag("WallRun"))
-        {
-            Ray ray = isLeftBox ? new Ray(transform.position,-transform.right) : new Ray(transform.position, -transform.right);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                Vector3 point = hit.point;
-                Vector3 rayBackToBox = point - transform.position;
-                Debug.Log(rayBackToBox);
-                if (player.oneOrTwoSwitchForNormalVectors == 1)
-                {
-                    player.lastNormalVector1 = rayBackToBox;
-                    player.oneOrTwoSwitchForNormalVectors = 2;
-                }
-                else
-                {
-                    player.lastNormalVector1 = rayBackToBox;
-                    player.oneOrTwoSwitchForNormalVectors = 1;
-                }
-            }
-           
+            //player.SetNormals(hit.normal);
+            //Debug.Log(Vector3.Angle(player.lastNormalVector1, player.lastNormalVector2));
+            //Debug.Log(player.lastWall1 == player.lastWall2);
         }
     }*/
 }

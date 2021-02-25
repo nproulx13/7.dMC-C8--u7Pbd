@@ -20,43 +20,54 @@ public class PlayerMovementRigidbody : MonoBehaviour
     private float slideForce = 75f;
     private float dashForce = 37.5f;
     private bool canDash = true;
+    private bool dashing = false;
     Vector3 move;
 
     [Header("Parkour")]
-    public GameObject lastWall;
-    public Vector3 lastNormalVector1;
-    public Vector3 lastNormalVector2;
+    public GameObject lastWall1;
+    public GameObject lastWall2;
+    public int oneOrTwoSwitchForWalls= 1;
+    //public Vector3 lastNormalVector1;
+    //public Vector3 lastNormalVector2;
+    public Vector3 lastNormalVector;
     public int oneOrTwoSwitchForNormalVectors = 1;
     public bool isWallRunning;
     public bool isWallRunningRight;
     public bool isWallRunningLeft;
-    private float wallRunUpForce = 8.5f;
+    private float wallRunUpForce = 12f;
     private float currentWallRunUpForce = 0f;
     private float wallRunDecreaseRate = 25f;
-    private float jumpOffWallUpForce = 7.5f;
-    private float jumpOffWallForwardForce = 18.5f;
+    private float jumpOffWallUpForce = 30.5f;
+    private float jumpOffWallForwardForce = 23.5f;
     public bool justJumpedOffWall = false;
-    private WallJumpBox wallJumpBox;
-    public string lastWallRunDirection;
     [SerializeField] private Animator headCamera;
     [SerializeField] private CapsuleCollider capsuleCollider; 
+    public Vector3 wallRunVelocity;
+    public WallRunBaseBox wallRunBaseBox;
+    public GameObject wallRunRig;
+    public Quaternion rigRotation;
+    public bool getNextWall = true;
+    private Vector3 jumpedOfWallVelocity = Vector3.zero;
 
     private float dashDurationSeconds = 1f;
     void Awake()
     {
-        wallJumpBox = GetComponentInChildren<WallJumpBox>();
+        getNextWall = true;
     }
 
     
     void Update()
     {
-        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, ground);
         if(isWallRunningRight)
         {
+            justJumpedOffWall = false;
+            canDoInput = true;
             headCamera.SetBool("Right", true);
         }
         else if (isWallRunningLeft)
         {
+            justJumpedOffWall = false;
+            canDoInput = true;
             headCamera.SetBool("Left", true);
         }
         else
@@ -70,21 +81,37 @@ public class PlayerMovementRigidbody : MonoBehaviour
             rbody.AddForce(0, jumpForce, 0, ForceMode.Impulse);
         }
 
-        if (wallJumpBox.canWallJump && !isGrounded)
+        if (isWallRunning && !isGrounded && !justJumpedOffWall)
         {
             if (Input.GetButtonDown("Jump"))
             {
-                if (lastWallRunDirection == "right")
-                    rbody.velocity = -transform.right * 0.75f * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce * 1.25f + transform.up * jumpOffWallUpForce * 3f; //+ transform.up * jumpOffWallUpForce;
-                else if (lastWallRunDirection == "left")
-                    rbody.velocity = transform.right * jumpOffWallForwardForce + transform.forward * jumpOffWallForwardForce * 1.25f + transform.up * jumpOffWallUpForce * 3f; //+ transform.up * jumpOffWallUpForce;
-                StartCoroutine(ChangeCanDoInput());
+                float x = Input.GetAxisRaw("Horizontal");
+                float z = Input.GetAxisRaw("Vertical");
+
+                if (Mathf.Abs(x) > 0 && (Mathf.Abs(x) > Mathf.Abs(z/2)))
+                {
+                    Vector3 jumpOffWallSideForce = isWallRunningRight ? -transform.right : transform.right;
+                    rbody.velocity = jumpOffWallForwardForce / 50 * transform.forward + transform.up * jumpOffWallUpForce * 1.55f + jumpOffWallSideForce * 10f;
+                    jumpedOfWallVelocity = rbody.velocity / 2;
+                }
+                else 
+                {
+                    Vector3 jumpOffWallSideForce = isWallRunningRight ? -transform.right : transform.right;
+                    rbody.velocity = jumpOffWallForwardForce * transform.forward + transform.up * jumpOffWallUpForce + jumpOffWallSideForce * 2.5f;
+                    jumpedOfWallVelocity = rbody.velocity / 2;
+                }
+
                 justJumpedOffWall = true;
-                ResetWallRun();
+                getNextWall = true;
+
+                isWallRunning = false;
+                isWallRunningLeft = false;
+                isWallRunningRight = false;
+                canDash = true;
             }
         }
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift))
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift) && !isWallRunning)
         {
             capsuleCollider.height = 0.5f;
             capsuleCollider.center = new Vector3(0, 0.25f, 0);
@@ -92,22 +119,30 @@ public class PlayerMovementRigidbody : MonoBehaviour
             StartCoroutine(Sliding());
         }
 
-        if(Input.GetKeyDown(KeyCode.Q) && canDash)
+        if (Input.GetKey(KeyCode.LeftShift) && !isWallRunning && !isGrounded)
         {
-            rbody.velocity = -transform.right.normalized * dashForce + transform.forward.normalized * 2 + move;
+            rbody.velocity = new Vector3(rbody.velocity.x, rbody.velocity.y - 60f * Time.deltaTime, rbody.velocity.z);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && canDash && !isWallRunning)
+        {
+            rbody.velocity = -transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
             StartCoroutine(Dashing());
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && canDash)
+        if (Input.GetKeyDown(KeyCode.E) && canDash && !isWallRunning)
         {
-            rbody.velocity = transform.right.normalized * dashForce + transform.forward.normalized * 2 + move;
+            rbody.velocity = transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
             StartCoroutine(Dashing());
         }
 
         if (isGrounded)
         {
-            lastWall = null;
-            justJumpedOffWall = false;
+            canDoInput = true;
+            lastNormalVector = Vector3.zero;
+            //lastNormalVector1 = Vector3.zero;
+            //lastNormalVector2 = Vector3.zero;
+            getNextWall = true;
             ResetWallRun();
         }
 
@@ -117,52 +152,66 @@ public class PlayerMovementRigidbody : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
-        float resultSpeedBasedOnDirection = ProcessMovment(x,z);
+        float resultSpeedBasedOnDirection = ProcessMovment(x, z);
         move = (transform.right * x + transform.forward * z).normalized;
 
-        if ((z != 0 || x != 0) && isGrounded) 
+        if ((z != 0 || x != 0) && isGrounded)
             headCamera.SetBool("Running", true);
-        else 
+        else
             headCamera.SetBool("Running", false);
 
-        if (canDoInput && canDash)
+        if (justJumpedOffWall && !dashing)
+        {
+            //move = (transform.right * x + transform.forward * z).normalized;
+            Vector3 jumpedOffWallAirSpeed = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, 0, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
+            rbody.velocity = new Vector3(jumpedOfWallVelocity.x, rbody.velocity.y - 20f * Time.deltaTime, jumpedOfWallVelocity.z) + jumpedOffWallAirSpeed;
+        }
+
+        else if (canDoInput && !dashing)
         {
             if (isGrounded && !isWallRunning)
             {
                 rbody.velocity = new Vector3(move.x * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
             }
 
-            if (!isGrounded)
+            else if (!isGrounded && !isWallRunning)//air speed
             {
-                rbody.velocity = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
+                rbody.velocity = new Vector3(move.x * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
+            }
+
+            else if (isWallRunning)
+            {
+                wallRunRig.transform.rotation = rigRotation;
+                if (isWallRunningRight && z > float.Epsilon)
+                {
+                    rbody.velocity = new Vector3(wallRunVelocity.x * 2f, currentWallRunUpForce, wallRunVelocity.z * 2f) + transform.right.normalized * 2;
+                }
+                else if(isWallRunningLeft && Mathf.Abs(z) > float.Epsilon)
+                {
+                    rbody.velocity = new Vector3(wallRunVelocity.x * 2f, currentWallRunUpForce, wallRunVelocity.z * 2f) + -transform.right.normalized * 2;
+                }
+                currentWallRunUpForce -= wallRunDecreaseRate * Time.fixedDeltaTime;
             }
 
             if (!isWallRunning)
             {
+                getNextWall = true;
+                wallRunRig.transform.localRotation = Quaternion.Euler(0,0,0);
                 currentWallRunUpForce = wallRunUpForce;
-            }
-            if (isWallRunning)
-            {
-                if (isWallRunningRight)
-                {
-                    rbody.velocity = new Vector3(rbody.velocity.x * 1.25f, currentWallRunUpForce, rbody.velocity.z * 1.25f) + transform.right.normalized * 2;
-                    lastWallRunDirection = "right";
-                }
-                else
-                {
-                    rbody.velocity = new Vector3(rbody.velocity.x * 1.25f, currentWallRunUpForce, rbody.velocity.z * 1.25f) + -transform.right.normalized * 2;
-                    lastWallRunDirection = "left";
-                }
-                currentWallRunUpForce -= wallRunDecreaseRate * Time.fixedDeltaTime;
             }
         }
     }
 
     public void ResetWallRun()
     {
+        canDoInput = true;
         isWallRunning = false;
         isWallRunningLeft = false;
         isWallRunningRight = false;
+        lastWall1 = null;
+        lastWall2 = null;
+        justJumpedOffWall = false;
+        getNextWall = true;
     }
 
     public float ProcessMovment(float x = 0f, float z = 0f)
@@ -182,21 +231,21 @@ public class PlayerMovementRigidbody : MonoBehaviour
             targetSpeed = forwardSpeed;
         }
 
-        targetSpeed = isWallRunning ? targetSpeed * 1.3f : justJumpedOffWall ? targetSpeed * 2f : !isGrounded ? targetSpeed * 0.9f : targetSpeed;
+        targetSpeed = isWallRunning ? targetSpeed * 1.7f : justJumpedOffWall ? targetSpeed * 1.2f : !isGrounded ? targetSpeed * 0.9f : targetSpeed;
         return targetSpeed;
     }
     IEnumerator ChangeCanDoInput()
     {
         canDoInput = false;
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.2f);
         canDoInput = true;
-        justJumpedOffWall = false;
     }
 
     IEnumerator Sliding()
     {
+        headCamera.SetTrigger("Slide");
         canDoInput = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         canDoInput = true;
         capsuleCollider.height = 2f;
         capsuleCollider.center = new Vector3(0, 0, 0);
@@ -204,30 +253,49 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
     IEnumerator Dashing()
     {
+        dashing = true;
         canDash = false;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.3f);
+
+        dashing = false;
+
+        yield return new WaitForSeconds(0.7f);
         canDash = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public Vector3 GetVelocity()
     {
-        if(collision.gameObject.CompareTag("WallRun"))
+        return transform.forward.normalized * 15f;
+    }
+
+    public void SetLastWalls(GameObject wall)
+    {
+        if(oneOrTwoSwitchForWalls == 1)
         {
-            ContactPoint[] contacts = collision.contacts;
-            Vector3 normal = contacts[0].normal;
-            Debug.DrawRay(contacts[0].point, normal, Color.cyan, 5f);
-            if (oneOrTwoSwitchForNormalVectors == 1)
-            {
-                lastNormalVector1 = normal;
-                oneOrTwoSwitchForNormalVectors = 2;
-            }
-            else
-            {
-                lastNormalVector2 = normal;
-                oneOrTwoSwitchForNormalVectors = 1;
-            }
+            lastWall1 = wall;
+            oneOrTwoSwitchForWalls = 2;
+        }
+        else if(oneOrTwoSwitchForWalls == 2)
+        {
+            lastWall2 = wall;
+            oneOrTwoSwitchForWalls = 1;
         }
     }
+
+    /*
+    public void SetNormals(Vector3 angles)
+    {
+        if (oneOrTwoSwitchForNormalVectors == 1)
+        {
+            lastNormalVector1  = angles;
+            oneOrTwoSwitchForNormalVectors = 2;
+        }
+        else if (oneOrTwoSwitchForNormalVectors == 2)
+        {
+            lastNormalVector2 = angles;
+            oneOrTwoSwitchForNormalVectors = 1;
+        }
+    }*/
 }
 
 
