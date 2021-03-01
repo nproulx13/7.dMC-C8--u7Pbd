@@ -21,6 +21,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
     private float dashForce = 37.5f;
     private bool canDash = true;
     private bool dashing = false;
+    private bool canSlide = true;
     Vector3 move;
 
     [Header("Parkour")]
@@ -111,7 +112,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
             }
         }
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift) && !isWallRunning)
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift) && !isWallRunning && canSlide)
         {
             capsuleCollider.height = 0.5f;
             capsuleCollider.center = new Vector3(0, 0.25f, 0);
@@ -126,14 +127,16 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q) && canDash && !isWallRunning)
         {
+            if(canSlide) headCamera.SetBool("DashLeft", true);
             rbody.velocity = -transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
-            StartCoroutine(Dashing());
+            StartCoroutine(Dashing("DashLeft"));
         }
 
         if (Input.GetKeyDown(KeyCode.E) && canDash && !isWallRunning)
         {
+            if (canSlide) headCamera.SetBool("DashRight", true);
             rbody.velocity = transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
-            StartCoroutine(Dashing());
+            StartCoroutine(Dashing("DashRight"));
         }
 
         if (isGrounded)
@@ -145,7 +148,6 @@ public class PlayerMovementRigidbody : MonoBehaviour
             getNextWall = true;
             ResetWallRun();
         }
-
     }
 
     private void FixedUpdate()
@@ -243,19 +245,23 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
     IEnumerator Sliding()
     {
+        canSlide = false;
         headCamera.SetTrigger("Slide");
         canDoInput = false;
         yield return new WaitForSeconds(1f);
         canDoInput = true;
         capsuleCollider.height = 2f;
         capsuleCollider.center = new Vector3(0, 0, 0);
+        yield return new WaitForSeconds(0.25f);
+        canSlide = true;
     }
 
-    IEnumerator Dashing()
+    IEnumerator Dashing(string direction)
     {
         dashing = true;
         canDash = false;
         yield return new WaitForSeconds(0.3f);
+        headCamera.SetBool(direction, false);
 
         dashing = false;
 
