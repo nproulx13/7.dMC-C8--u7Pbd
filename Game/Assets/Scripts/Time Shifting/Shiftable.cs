@@ -22,7 +22,18 @@ public class Shiftable : MonoBehaviour
             try
             {
                 GetComponent<Animator>().speed = localTime;
-            } catch { }
+            } 
+            catch 
+            {
+                try
+                {
+                    GetComponentInChildren<Animator>().speed = localTime;
+                }
+                catch
+                {
+
+                }
+            }
             //attempt to freeze AI
             try
             {

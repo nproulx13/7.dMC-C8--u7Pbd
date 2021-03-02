@@ -6,6 +6,7 @@ TagManager:
   tags:
   - WallRun
   - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX

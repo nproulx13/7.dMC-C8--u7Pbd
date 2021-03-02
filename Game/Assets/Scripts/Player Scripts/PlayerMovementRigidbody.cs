@@ -28,9 +28,6 @@ public class PlayerMovementRigidbody : MonoBehaviour
     public GameObject lastWall1;
     public GameObject lastWall2;
     public int oneOrTwoSwitchForWalls= 1;
-    //public Vector3 lastNormalVector1;
-    //public Vector3 lastNormalVector2;
-    public Vector3 lastNormalVector;
     public int oneOrTwoSwitchForNormalVectors = 1;
     public bool isWallRunning;
     public bool isWallRunningRight;
@@ -50,7 +47,13 @@ public class PlayerMovementRigidbody : MonoBehaviour
     public bool getNextWall = true;
     private Vector3 jumpedOfWallVelocity = Vector3.zero;
 
-    private float dashDurationSeconds = 1f;
+    [Header("Enemy Parkour")]
+    [SerializeField] private BulletEnemyJumpBox bulletEnemyJumpBox;
+    private float jumpOffEnemyUpForce = 35f;
+    private float jumpOffEnemyForwardForce = 150f;
+    private float jumpOffEnemySpeedBoost = 2.5f;
+    private bool justJumpedOffEnemy = false;
+
     void Awake()
     {
         getNextWall = true;
@@ -61,12 +64,14 @@ public class PlayerMovementRigidbody : MonoBehaviour
     {
         if(isWallRunningRight)
         {
+            justJumpedOffEnemy = false;
             justJumpedOffWall = false;
             canDoInput = true;
             headCamera.SetBool("Right", true);
         }
         else if (isWallRunningLeft)
         {
+            justJumpedOffEnemy = false;
             justJumpedOffWall = false;
             canDoInput = true;
             headCamera.SetBool("Left", true);
@@ -139,12 +144,17 @@ public class PlayerMovementRigidbody : MonoBehaviour
             StartCoroutine(Dashing("DashRight"));
         }
 
+        if (bulletEnemyJumpBox.canJumpOffEnemy && !isGrounded && !isWallRunning && Input.GetButtonDown("Jump") && !justJumpedOffEnemy)
+        {
+            ResetWallRun();
+            rbody.velocity = transform.up * jumpOffEnemyUpForce;
+            StartCoroutine(JustJumpedOffEnemy());
+        }
+
         if (isGrounded)
         {
+            justJumpedOffEnemy = false;
             canDoInput = true;
-            lastNormalVector = Vector3.zero;
-            //lastNormalVector1 = Vector3.zero;
-            //lastNormalVector2 = Vector3.zero;
             getNextWall = true;
             ResetWallRun();
         }
@@ -164,7 +174,6 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
         if (justJumpedOffWall && !dashing)
         {
-            //move = (transform.right * x + transform.forward * z).normalized;
             Vector3 jumpedOffWallAirSpeed = new Vector3(move.x * Time.deltaTime * 100f * resultSpeedBasedOnDirection, 0, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
             rbody.velocity = new Vector3(jumpedOfWallVelocity.x, rbody.velocity.y - 20f * Time.deltaTime, jumpedOfWallVelocity.z) + jumpedOffWallAirSpeed;
         }
@@ -174,6 +183,12 @@ public class PlayerMovementRigidbody : MonoBehaviour
             if (isGrounded && !isWallRunning)
             {
                 rbody.velocity = new Vector3(move.x * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection);
+            }
+
+            else if (!isGrounded && !isWallRunning && justJumpedOffEnemy)//enemy jump air speed
+            {
+                move = (transform.right * x *0.75f + transform.forward * z * 1.25f).normalized;
+                rbody.velocity = new Vector3(move.x * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection * jumpOffEnemySpeedBoost, rbody.velocity.y, move.z * Time.fixedDeltaTime * 100f * resultSpeedBasedOnDirection * jumpOffEnemySpeedBoost);
             }
 
             else if (!isGrounded && !isWallRunning)//air speed
@@ -265,7 +280,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
         dashing = false;
 
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
         canDash = true;
     }
 
@@ -288,20 +303,12 @@ public class PlayerMovementRigidbody : MonoBehaviour
         }
     }
 
-    /*
-    public void SetNormals(Vector3 angles)
+    private IEnumerator JustJumpedOffEnemy()
     {
-        if (oneOrTwoSwitchForNormalVectors == 1)
-        {
-            lastNormalVector1  = angles;
-            oneOrTwoSwitchForNormalVectors = 2;
-        }
-        else if (oneOrTwoSwitchForNormalVectors == 2)
-        {
-            lastNormalVector2 = angles;
-            oneOrTwoSwitchForNormalVectors = 1;
-        }
-    }*/
+        justJumpedOffEnemy = true;
+        yield return new WaitForSeconds(1f);
+        justJumpedOffEnemy = false;
+    }
 }
 
 

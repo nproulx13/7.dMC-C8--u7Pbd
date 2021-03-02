@@ -11,10 +11,8 @@ public class Look : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        //body = GetComponentInParent<Movement>().transform;
     }
 
-    // Update is called once per frame
     private void LateUpdate()
     {
         //cursor locking
