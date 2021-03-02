@@ -33,6 +33,7 @@ public class Algro : Controller
             GameObject g = Instantiate(hyper,transform);
             g.GetComponent<Shiftable>().timeZone = GetComponent<Shiftable>().timeZone;
             g.GetComponent<HyperCube>().targ = targ;
+            g.GetComponent<HyperCube>().parent = gameObject;
         }
     }
     private void OnTriggerEnter(Collider other)
