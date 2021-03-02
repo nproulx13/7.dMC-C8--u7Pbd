@@ -20,6 +20,7 @@ public class MoverController : Controller
     // Update is called once per frame
     void Update()
     {
+        if (localTime == 0) return;
         counter += localTime * Time.deltaTime;
         counter %= 180;
         //GetComponent<Rigidbody>().velocity = new Vector3(localTime * Mathf.Sin(counter) * 8, 0, 0);

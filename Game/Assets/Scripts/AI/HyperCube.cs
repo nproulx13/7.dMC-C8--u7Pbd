@@ -5,10 +5,10 @@ using UnityEngine;
 public class HyperCube : Controller
 {
     public GameObject targ;
-    private float burst = 2;
+    public float burst = 2;
     private float localTime;
     private Vector3 last;
-    private bool go;
+    private bool go = false;
 
     public override void setTime(float f)
     {
@@ -18,7 +18,7 @@ public class HyperCube : Controller
     // Start is called before the first frame update
     void Start()
     {
-        
+        localTime = TimeCore.times[GetComponent<Shiftable>().timeZone];
     }
 
     // Update is called once per frame
@@ -37,11 +37,7 @@ public class HyperCube : Controller
             GetComponent<Rigidbody>().velocity = Vector3.Normalize(transform.position - last) * -25;
             go = true;
         }
-        else if (go)
-            burst -= Time.deltaTime * localTime;
         else
-        {
             burst -= Time.deltaTime * localTime;
-        }
     }
 }
