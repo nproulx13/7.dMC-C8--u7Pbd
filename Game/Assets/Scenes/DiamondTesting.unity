@@ -218,7 +218,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3835ca018f54c844ea2829eeff441d25, type: 2}
+  - {fileID: 2100000, guid: 2bc3b9df09b397d47bc08b117f5a814c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -496,7 +496,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3835ca018f54c844ea2829eeff441d25, type: 2}
+  - {fileID: 2100000, guid: 2bc3b9df09b397d47bc08b117f5a814c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1945,7 +1945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.42
+      value: -0.85
       objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1995,6 +1995,10 @@ PrefabInstance:
       propertyPath: positionPredictionValue
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 8787456300930805748, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 729e2bf9df565ae4a9acdf08bc708266, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
 --- !u!1 &759414067
@@ -3838,7 +3842,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3835ca018f54c844ea2829eeff441d25, type: 2}
+  - {fileID: 2100000, guid: 2bc3b9df09b397d47bc08b117f5a814c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3977,7 +3981,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3835ca018f54c844ea2829eeff441d25, type: 2}
+  - {fileID: 2100000, guid: 2bc3b9df09b397d47bc08b117f5a814c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4324,6 +4328,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1934760874, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: timeZone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_RootOrder
       value: 14
@@ -4384,6 +4392,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dimond (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 1381241706051275011, guid: 5b976d6139f491e458d9ec436bc96051, type: 3}
     - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: bulletSpeed
       value: 17.5
@@ -4950,6 +4962,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1934760874, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: timeZone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -4968,11 +4984,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.168
+      value: 20.67
       objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 23.5
+      value: -1.05
       objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5010,6 +5026,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dimond (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 1381241706051275011, guid: 5b976d6139f491e458d9ec436bc96051, type: 3}
     - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: bulletSpeed
       value: 17.5
@@ -5345,6 +5365,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1934760874, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: timeZone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6801689154948322308, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -5405,6 +5429,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dimond
       objectReference: {fileID: 0}
+    - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 1381241706051275011, guid: 5b976d6139f491e458d9ec436bc96051, type: 3}
     - target: {fileID: 6801689154948322427, guid: 7f223911abb64d048a016ade9ff587f4, type: 3}
       propertyPath: bulletSpeed
       value: 17.5

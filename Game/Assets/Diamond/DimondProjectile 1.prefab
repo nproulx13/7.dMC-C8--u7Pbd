@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -5220218097446383035}
   - component: {fileID: 5456476318273104816}
   m_Layer: 0
-  m_Name: DimondProjectile
+  m_Name: DimondProjectile 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ PrefabInstance:
     - target: {fileID: 5986286030885151965, guid: 3fe4d5a7614205d409fccdab9bc5be73, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f47edcad7d4ae4f40b707f9e7ad4b848, type: 2}
+      objectReference: {fileID: 2100000, guid: 38b72d06b2b464344b0663fa5f4dc18b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fe4d5a7614205d409fccdab9bc5be73, type: 3}
 --- !u!4 &5077812379447682157 stripped
