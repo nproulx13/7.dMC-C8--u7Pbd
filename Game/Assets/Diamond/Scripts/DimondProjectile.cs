@@ -9,6 +9,7 @@ public class DimondProjectile : Controller
     public GameObject parent;
     private Vector3 velocity;
     private Rigidbody rbody;
+    private float localTime;
     private float timeTillDestroy = 0;
     private float timeToDestroy = 3f;
     private bool frozen = false;
@@ -20,6 +21,7 @@ public class DimondProjectile : Controller
     {
         rbody = GetComponent<Rigidbody>();
         velocity = rbody.velocity;
+        setTime(TimeCore.times[GetComponent<Shiftable>().timeZone]);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -39,6 +41,7 @@ public class DimondProjectile : Controller
 
     public override void setTime(float f)
     {
+        localTime = f;
         frozen = f == 0;
         if(frozen)
             gameObject.layer = 8;
@@ -50,10 +53,10 @@ public class DimondProjectile : Controller
     {
         if (!frozen)
         {
-            transform.Rotate(0, 0, 200 * Time.deltaTime);
+            transform.Rotate(0, 0, 200 * Time.deltaTime * localTime);
             rbody.isKinematic = false;
-            rbody.velocity = velocity;
-            timeTillDestroy += Time.deltaTime;
+            rbody.velocity = velocity * localTime;
+            timeTillDestroy += Time.deltaTime * localTime;
             if (timeTillDestroy == timeToDestroy)
             {
                 if (hitParticle != null) Instantiate(hitParticle);

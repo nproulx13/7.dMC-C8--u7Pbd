@@ -12,6 +12,11 @@ public class Algro : Controller
     public override void setTime(float f)
     {
         localTime = f;
+        bool frozen = f == 0;
+        if (frozen)
+            gameObject.layer = 8;
+        else
+            gameObject.layer = 9;
     }
 
     // Start is called before the first frame update

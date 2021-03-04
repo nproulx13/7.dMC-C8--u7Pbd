@@ -11,11 +11,14 @@ public class HyperCube : Controller
     private float localTime;
     private Vector3 last;
     private Vector3 offset;
+    private float resetRotation;
     private bool go = false;
 
     public override void setTime(float f)
     {
         localTime = f;
+        if (f == 0)
+            resetRotation = 5;
     }
 
     // Start is called before the first frame update
@@ -28,7 +31,14 @@ public class HyperCube : Controller
     void Update()
     {
         if(localTime != 0)
-        transform.LookAt(targ.transform);
+        {
+            //transform.LookAt(player.transform);
+            Vector3 whereToLook = targ.transform.position - transform.position;
+            resetRotation += 2 * Time.deltaTime * localTime;
+            if (resetRotation >= 6) resetRotation += 50 * Time.deltaTime * localTime;
+            resetRotation = Mathf.Clamp(resetRotation, 5, 100);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(whereToLook, Vector3.up), resetRotation * Time.deltaTime * localTime);
+        }
         //Use for pyramid
         if (burst < -1)
         {
@@ -40,12 +50,12 @@ public class HyperCube : Controller
         {
             last = targ.transform.position + Vector3.up + offset;
             burst -= Time.deltaTime * localTime;
-            GetComponent<Rigidbody>().velocity = (Vector3.Normalize(last - transform.position)) * speed * localTime;
             go = true;
         }
         else if (go)
         {
             burst -= Time.deltaTime * localTime;
+            GetComponent<Rigidbody>().velocity = (Vector3.Normalize(last - transform.position)) * speed * localTime;
         }
         else
         {

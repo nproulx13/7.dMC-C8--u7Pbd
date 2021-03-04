@@ -11,6 +11,7 @@ public class Dimond : Controller
     private Vector3 position1;
     private Vector3 position2;
     private Vector3 predictedPosition;
+    private float localTime; 
     private float predicitonAdjusmentIncrease = 4f;
     public float positionPredictionValue = 10f;
     public float distancePredictionValue = 10f;
@@ -40,10 +41,10 @@ public class Dimond : Controller
         {
             //transform.LookAt(player.transform);
             Vector3 whereToLook = player.transform.position - transform.position;
-            resetRoation += 2*Time.deltaTime;
-            if (resetRoation >= 6) resetRoation += 50 * Time.deltaTime;
+            resetRoation += 2*Time.deltaTime * localTime;
+            if (resetRoation >= 6) resetRoation += 50 * Time.deltaTime * localTime;
             resetRoation = Mathf.Clamp(resetRoation, 5, 100);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(whereToLook, Vector3.up), resetRoation * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(whereToLook, Vector3.up), resetRoation * Time.deltaTime * localTime);
         }
     }
 
@@ -90,6 +91,7 @@ public class Dimond : Controller
     public override void setTime(float f)
     {
         frozen = f == 0;
+        localTime = f;
         if (frozen)
         {
             resetRoation = 5;
