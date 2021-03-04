@@ -19,6 +19,11 @@ public class HyperCube : Controller
         localTime = f;
         if (f == 0)
             resetRotation = 5;
+        bool frozen = f == 0;
+        if (frozen)
+            gameObject.layer = 8;
+        else
+            gameObject.layer = 9;
     }
 
     // Start is called before the first frame update
@@ -71,7 +76,7 @@ public class HyperCube : Controller
         {
             Debug.Log("<color=red>Dead</color>");
         }
-        else if (collision.gameObject != parent && localTime > 0)
+        else if (collision.gameObject != parent && localTime > 0 && collision.gameObject.layer == 8)
         {
             Debug.Log("<color=yellow>Destroyed</color>");
             Destroy(gameObject);

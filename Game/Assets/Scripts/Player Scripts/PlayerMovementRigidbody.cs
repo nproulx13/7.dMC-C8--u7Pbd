@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerMovementRigidbody : MonoBehaviour
 {
-    float forwardSpeed = 8f;
-    float sideToSideSpeed = 7f;
-    float backSpeed = 6f;
+    float forwardSpeed = 9f;
+    float sideToSideSpeed = 8f;
+    float backSpeed = 7f;
     private float targetSpeed = 0f;
     public bool canDoInput = true;
 
@@ -16,8 +16,8 @@ public class PlayerMovementRigidbody : MonoBehaviour
     private float groundDistance = 0.4f;
     public LayerMask ground;
     public Rigidbody rbody;
-    private float jumpForce = 1200f;
-    private float slideForce = 75f;
+    private float jumpForce = 1400f;
+    private float slideForce = 90f;
     private float dashForce = 37.5f;
     private bool canDash = true;
     private bool dashing = false;

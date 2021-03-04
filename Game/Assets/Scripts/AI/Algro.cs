@@ -5,10 +5,10 @@ using UnityEngine;
 public class Algro : Controller
 {
     private float localTime;
-    private bool occupied;
+    public bool occupied;
     public float reload = 2;
     public GameObject hyper;
-    private GameObject targ;
+    public GameObject targ;
     public override void setTime(float f)
     {
         localTime = f;
@@ -40,20 +40,6 @@ public class Algro : Controller
             g.GetComponent<HyperCube>().targ = targ;
             g.GetComponent<HyperCube>().parent = gameObject;
         }
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!occupied && other.tag == "Player")
-        {
-            targ = other.gameObject;
-            occupied = true;
-        }
-
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (occupied && other.tag == "Player") occupied = false;
-        reload = 2;
     }
 
 }
