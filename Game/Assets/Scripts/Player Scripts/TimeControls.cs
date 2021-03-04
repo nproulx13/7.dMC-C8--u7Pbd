@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class TimeControls : MonoBehaviour
 {
+    private bool canShift = true;
     private Volume volume;
     private LensDistortion distortion;
     private ColorAdjustments colors;
@@ -38,25 +39,46 @@ public class TimeControls : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetButtonDown("Time1"))
+        if (canShift)
         {
-            TimeCore.Shift(0);
-            StartCoroutine(DistortForTimeShift());
-        }
-        else if(Input.GetButtonDown("Time2"))
-        {
-            TimeCore.Shift(1);
-            StartCoroutine(DistortForTimeShift());
-        }
-        else if (Input.GetButtonDown("Time3"))
-        {
-            TimeCore.Shift(2);
-            StartCoroutine(DistortForTimeShift());
-        }
-        else if (Input.GetButtonDown("Time4"))
-        {
-            TimeCore.Shift(3);
-            StartCoroutine(DistortForTimeShift());
+            if (Input.GetButtonDown("Time1"))
+            {
+                TimeCore.Shift(0);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
+            else if (Input.GetButtonDown("Time2"))
+            {
+                TimeCore.Shift(1);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
+            else if (Input.GetButtonDown("Time3"))
+            {
+                TimeCore.Shift(2);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
+            else if (Input.GetButtonDown("Time4"))
+            {
+                TimeCore.Shift(3);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
+
+            ///////////////scroll wheel
+            else if (Input.GetAxis("Time3MouseWheel") > 0)
+            {
+                TimeCore.Shift(2);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
+            else if (Input.GetAxis("Time4MouseWheel") < 0)
+            {
+                TimeCore.Shift(3);
+                StartCoroutine(DistortForTimeShift());
+                StartCoroutine(Shift());
+            }
         }
     }
 
@@ -95,5 +117,12 @@ public class TimeControls : MonoBehaviour
         //vignette.intensity.value = vignetteInit;
 
 
+    }
+
+    private IEnumerator Shift()
+    {
+        canShift = false;
+        yield return new WaitForSeconds(0.5f);
+        canShift = true;
     }
 }
