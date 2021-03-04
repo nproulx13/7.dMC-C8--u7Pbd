@@ -6,6 +6,7 @@ public class Shiftable : MonoBehaviour
 {
     private float localTime = 0;
     public int timeZone;
+    public Material active, stopped;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,9 +43,34 @@ public class Shiftable : MonoBehaviour
             //attempt to freeze Particles
             try
             {
-                ParticleSystem p = GetComponent<ParticleSystem>();
+
             }
             catch { }
+            if (localTime > 0)
+            {
+                try
+                {
+                    GetComponent<MeshRenderer>().material = active;
+                }
+                catch
+                {
+                    foreach(MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                    m.material = active;
+                }
+            }
+            else
+            {
+                try
+                {
+                    GetComponent<MeshRenderer>().material = stopped;
+                }
+                catch
+                {
+                    foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                        m.material = stopped;
+                }
+            }
+
         }
     }
 }
