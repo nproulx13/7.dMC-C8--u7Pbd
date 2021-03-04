@@ -6,7 +6,8 @@ public class Algro : Controller
 {
     private float localTime;
     public bool occupied;
-    public float reload = 2;
+    public float reload = 0;
+    public float reloadTime = 4f;
     public GameObject hyper;
     public GameObject targ;
     public override void setTime(float f)
@@ -22,7 +23,7 @@ public class Algro : Controller
     // Start is called before the first frame update
     void Start()
     {
-        
+        reload = 0;
     }
 
     // Update is called once per frame
@@ -34,7 +35,7 @@ public class Algro : Controller
         }
         if (reload < 0)
         {
-            reload = 2;
+            reload = reloadTime;
             GameObject g = Instantiate(hyper,transform);
             g.GetComponent<Shiftable>().timeZone = GetComponent<Shiftable>().timeZone;
             g.GetComponent<HyperCube>().targ = targ;

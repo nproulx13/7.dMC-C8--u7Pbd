@@ -2105,7 +2105,7 @@ GameObject:
   - component: {fileID: 8916704590614298668}
   m_Layer: 0
   m_Name: Algro
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2165,7 +2165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   occupied: 0
-  reload: 2
+  reload: 0
+  reloadTime: 4
   hyper: {fileID: 6278579286834565298, guid: 4704bef1d70b8e748859458ffa6df46f, type: 3}
   targ: {fileID: 0}
 --- !u!114 &1771386664298591965

@@ -17,6 +17,6 @@ public class AlgroSight : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (a.occupied && other.tag == "Player") a.occupied = false;
-        a.reload = 2;
+        a.reload = a.reloadTime;
     }
 }

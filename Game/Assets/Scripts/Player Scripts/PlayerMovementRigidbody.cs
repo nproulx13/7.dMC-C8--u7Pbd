@@ -49,10 +49,11 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
     [Header("Enemy Parkour")]
     [SerializeField] private BulletEnemyJumpBox bulletEnemyJumpBox;
-    private float jumpOffEnemyUpForce = 35f;
+    private float jumpOffEnemyUpForce = 45f;
     private float jumpOffEnemyForwardForce = 150f;
     private float jumpOffEnemySpeedBoost = 2.5f;
     private bool justJumpedOffEnemy = false;
+    private bool canJumpOffEnemy = true;
 
     void Awake()
     {
@@ -280,7 +281,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
         dashing = false;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.35f);
         canDash = true;
     }
 

@@ -28,7 +28,7 @@ public class DimondProjectile : Controller
     {
         if(collision.gameObject.CompareTag("Player")&&!frozen)
         {
-            Debug.Log("<color=red>Dead</color>");
+            //Debug.Log("<color=red>Dead</color>");
         }
         else if(collision.gameObject!=parent && !frozen)
         {

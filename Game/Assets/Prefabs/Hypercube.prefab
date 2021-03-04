@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 169114794113972879}
   - component: {fileID: 1630959902109627537}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hypercube Proj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1498797329727913}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6105267516397230163}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 557157274307940137}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HyperCubeProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7850264266880104973}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,8 +226,8 @@ GameObject:
   - component: {fileID: 6620457794003534584}
   - component: {fileID: 6620457794003534585}
   - component: {fileID: 6620457794003534590}
-  m_Layer: 0
-  m_Name: HyperCube
+  m_Layer: 9
+  m_Name: Hypercube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -276,7 +276,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Size: {x: 0.4, y: 0.4, z: 0.4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &6620457794003534565
 Animator:
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targ: {fileID: 0}
   burst: 2
-  speed: 25
+  speed: 15
   parent: {fileID: 0}
 --- !u!1 &9161248338395418838
 GameObject:
@@ -349,7 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7960351859525003243}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bone.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
