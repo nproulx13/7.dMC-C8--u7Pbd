@@ -9,6 +9,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
     float backSpeed = 7f;
     private float targetSpeed = 0f;
     public bool canDoInput = true;
+    private PlayerAudio playerAudio;
 
 
     public bool isGrounded = true;
@@ -58,6 +59,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
     void Awake()
     {
+        playerAudio = GetComponent<PlayerAudio>();
         getNextWall = true;
     }
 
@@ -84,7 +86,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
             headCamera.SetBool("Left", false);
         }
 
-        if ((Input.GetButton("Jump") || Input.GetAxis("JumpController") > 0) && isGrounded && canJumpAgain)
+        if ((Input.GetButtonDown("Jump") || Input.GetAxis("JumpController") > 0) && isGrounded && canJumpAgain)
         {
             rbody.AddForce(0, jumpForce, 0, ForceMode.Impulse);
             canJumpAgain = false;
@@ -93,7 +95,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
 
         if (isWallRunning && !isGrounded && !justJumpedOffWall)
         {
-            if ((Input.GetButton("Jump") || Input.GetAxis("JumpController") > 0) && canJumpAgain)
+            if ((Input.GetButtonDown("Jump") || Input.GetAxis("JumpController") > 0) && canJumpAgain)
             {
                 float x = Input.GetAxisRaw("Horizontal");
                 float z = Input.GetAxisRaw("Vertical");
