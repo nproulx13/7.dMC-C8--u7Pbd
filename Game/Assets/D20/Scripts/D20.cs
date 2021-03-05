@@ -13,9 +13,11 @@ public class D20 : Controller
     public bool isTracking = false;
 
     [SerializeField] private Transform[] shootBoxes;
+    private D20AudioManager d20Audio;
 
     private void Awake()
     {
+        d20Audio = GetComponent<D20AudioManager>();
         player = FindObjectOfType<PlayerMovementRigidbody>();
     }
 
@@ -40,6 +42,7 @@ public class D20 : Controller
     {
         if (!frozen && isTracking)
         {
+            d20Audio.PlayD20Sound(1);
             for(int i = 0; i<shootBoxes.Length; i++)
             {
                 GameObject bullet = Instantiate(projectile);

@@ -13,6 +13,7 @@ public class HyperCube : Controller
     private Vector3 offset;
     private Rigidbody rbody;
     public bool isTracking = true;
+    [SerializeField] private HyperCubeAudio hyperCubeAudio;
 
     public override void setTime(float f)
     {
@@ -20,11 +21,13 @@ public class HyperCube : Controller
         bool frozen = f == 0;
         if (frozen)
         {
+            hyperCubeAudio.PlayHyperCubeInactive();
             rbody.isKinematic = true;
             gameObject.layer = 8;
         }
         else
         {
+            hyperCubeAudio.PlayHyperCubeActive();
             rbody.isKinematic = false;
             gameObject.layer = 9;
         }

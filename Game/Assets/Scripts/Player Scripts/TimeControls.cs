@@ -6,17 +6,20 @@ using UnityEngine.Rendering.Universal;
 
 public class TimeControls : MonoBehaviour
 {
+    private PlayerAudio playerAudio;
     private bool canShift = true;
     private Volume volume;
     private LensDistortion distortion;
     private ColorAdjustments colors;
     private ChromaticAberration chromatic;
+    private int currentTimeZone = 0;
     //private Vignette vignette;
 
     private float chromaticInit = 0f;
     //private float vignetteInit = 0f;
     private void Awake()
     {
+        playerAudio = GetComponent<PlayerAudio>();
         //postProcessing = FindObjectOfType<Volume>().GetComponent<Animator>();
         volume = FindObjectOfType<Volume>();
 
@@ -41,29 +44,37 @@ public class TimeControls : MonoBehaviour
     {
         if (canShift)
         {
-            if (Input.GetButtonDown("Time1"))
+            if (Input.GetButtonDown("Time1") && currentTimeZone!=1)
             {
+                currentTimeZone = 1;
+                playerAudio.PlayWarp(1);
                 DebugTime(1);
                 TimeCore.Shift(0);
                 StartCoroutine(DistortForTimeShift());
                 StartCoroutine(Shift());
             }
-            else if (Input.GetButtonDown("Time2"))
+            else if (Input.GetButtonDown("Time2") && currentTimeZone != 2)
             {
+                currentTimeZone = 2;
+                playerAudio.PlayWarp(2);
                 DebugTime(2);
                 TimeCore.Shift(1);
                 StartCoroutine(DistortForTimeShift());
                 StartCoroutine(Shift());
             }
-            else if (Input.GetButtonDown("Time3"))
+            else if (Input.GetButtonDown("Time3") && currentTimeZone != 3)
             {
+                currentTimeZone = 3;
+                playerAudio.PlayWarp(3);
                 DebugTime(3);
                 TimeCore.Shift(2);
                 StartCoroutine(DistortForTimeShift());
                 StartCoroutine(Shift());
             }
-            else if (Input.GetButtonDown("Time4"))
+            else if (Input.GetButtonDown("Time4") && currentTimeZone != 4)
             {
+                currentTimeZone = 4;
+                playerAudio.PlayWarp(4);
                 DebugTime(4);
                 TimeCore.Shift(3);
                 StartCoroutine(DistortForTimeShift());
@@ -71,15 +82,19 @@ public class TimeControls : MonoBehaviour
             }
 
             ///////////////scroll wheel
-            else if (Input.GetAxis("Time3MouseWheel") > 0)
+            else if (Input.GetAxis("Time3MouseWheel") > 0 && currentTimeZone != 3)
             {
+                currentTimeZone = 3;
+                playerAudio.PlayWarp(3);
                 DebugTime(3);
                 TimeCore.Shift(2);
                 StartCoroutine(DistortForTimeShift());
                 StartCoroutine(Shift());
             }
-            else if (Input.GetAxis("Time4MouseWheel") < 0)
+            else if (Input.GetAxis("Time4MouseWheel") < 0 && currentTimeZone != 4)
             {
+                currentTimeZone = 4;
+                playerAudio.PlayWarp(4);
                 DebugTime(4);
                 TimeCore.Shift(3);
                 StartCoroutine(DistortForTimeShift());
