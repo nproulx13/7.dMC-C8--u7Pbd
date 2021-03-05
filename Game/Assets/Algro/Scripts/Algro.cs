@@ -9,7 +9,7 @@ public class Algro : Controller
     public float reload = 0;
     public float reloadTime = 4f;
     public GameObject hyper;
-    public GameObject targ;
+    public GameObject player;
     public override void setTime(float f)
     {
         localTime = f;
@@ -20,7 +20,10 @@ public class Algro : Controller
             gameObject.layer = 9;
     }
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        player = FindObjectOfType<PlayerMovementRigidbody>().gameObject;
+    }
     void Start()
     {
         reload = 0;
@@ -38,7 +41,7 @@ public class Algro : Controller
             reload = reloadTime;
             GameObject g = Instantiate(hyper,transform);
             g.GetComponent<Shiftable>().timeZone = GetComponent<Shiftable>().timeZone;
-            g.GetComponent<HyperCube>().targ = targ;
+            g.GetComponent<HyperCube>().targ = player;
             g.GetComponent<HyperCube>().parent = gameObject;
         }
     }

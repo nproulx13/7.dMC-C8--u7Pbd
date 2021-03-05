@@ -19,6 +19,7 @@ public class Dimond : Controller
     public float durationBetweenShotsInSeconds = 2f;
     private bool frozen = false;
     private float resetRoation = 5f;
+    public bool isTracking;
 
     private void Awake()
     {
@@ -37,7 +38,7 @@ public class Dimond : Controller
     // Update is called once per frame
     void Update()
     {
-        if (!frozen)
+        if (!frozen && isTracking)
         {
             //transform.LookAt(player.transform);
             Vector3 whereToLook = player.transform.position - transform.position;
@@ -50,7 +51,7 @@ public class Dimond : Controller
 
     private IEnumerator Shoot()
     {
-        if (!frozen)
+        if (!frozen && isTracking)
         {
             GameObject spawnedBullet = Instantiate(bullet) as GameObject;
             spawnedBullet.transform.position = shootBox.transform.position;

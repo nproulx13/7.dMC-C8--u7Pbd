@@ -10,6 +10,7 @@ public class D20 : Controller
     public float durationBetweenShotsInSeconds = 2f;
     private bool frozen = false;
     private float resetRoation = 5f;
+    public bool isTracking = false;
 
     [SerializeField] private Transform[] shootBoxes;
 
@@ -25,7 +26,7 @@ public class D20 : Controller
 
     void Update()
     {
-        if (!frozen)
+        if (!frozen && isTracking)
         {
             Vector3 whereToLook = player.transform.position - transform.position;
             resetRoation += 2 * Time.deltaTime;
@@ -37,7 +38,7 @@ public class D20 : Controller
 
     private IEnumerator Shoot()
     {
-        if (!frozen)
+        if (!frozen && isTracking)
         {
             for(int i = 0; i<shootBoxes.Length; i++)
             {

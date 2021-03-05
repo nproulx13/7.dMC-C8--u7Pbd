@@ -1,5 +1,63 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1456534960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1456534961}
+  - component: {fileID: 1456534962}
+  - component: {fileID: 8243506910949749755}
+  m_Layer: 0
+  m_Name: TrackerBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1456534961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456534960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_Children: []
+  m_Father: {fileID: 6659185800151173640}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1456534962
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456534960}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8243506910949749755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456534960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69810e6f7805de74287ee73740544304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hyperCube: {fileID: 6620457794003534590}
 --- !u!1 &169776982369552030
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +304,7 @@ Transform:
   m_Children:
   - {fileID: 169114794113972879}
   - {fileID: 557157274307940137}
+  - {fileID: 1456534961}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -336,10 +395,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de60229f388c7a74aa3ff872b3fbd529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targ: {fileID: 0}
+  targ: {fileID: 2787827359041496021}
   burst: 2
-  speed: 15
+  speed: 12.5
   parent: {fileID: 0}
+  isTracking: 1
 --- !u!1 &9161248338395418838
 GameObject:
   m_ObjectHideFlags: 0

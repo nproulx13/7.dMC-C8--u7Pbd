@@ -9,7 +9,7 @@ public class AlgroSight : MonoBehaviour
     {
         if (!a.occupied && other.tag == "Player")
         {
-            a.targ = other.gameObject;
+            a.player = other.gameObject;
             a.occupied = true;
         }
 
@@ -17,6 +17,6 @@ public class AlgroSight : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (a.occupied && other.tag == "Player") a.occupied = false;
-        a.reload = a.reloadTime;
+        a.reload = a.reloadTime/2;
     }
 }

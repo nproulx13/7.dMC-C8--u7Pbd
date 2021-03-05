@@ -23,6 +23,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
     private bool dashing = false;
     private bool canSlide = true;
     Vector3 move;
+    private bool canJumpAgain = true;
 
     [Header("Parkour")]
     public GameObject lastWall1;
@@ -63,7 +64,7 @@ public class PlayerMovementRigidbody : MonoBehaviour
     
     void Update()
     {
-        if(isWallRunningRight)
+        if (isWallRunningRight)
         {
             justJumpedOffEnemy = false;
             justJumpedOffWall = false;
@@ -83,14 +84,16 @@ public class PlayerMovementRigidbody : MonoBehaviour
             headCamera.SetBool("Left", false);
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if ((Input.GetButton("Jump") || Input.GetAxis("JumpController") > 0) && isGrounded && canJumpAgain)
         {
             rbody.AddForce(0, jumpForce, 0, ForceMode.Impulse);
+            canJumpAgain = false;
+            StartCoroutine(ResetJump());
         }
 
         if (isWallRunning && !isGrounded && !justJumpedOffWall)
         {
-            if (Input.GetButtonDown("Jump"))
+            if ((Input.GetButton("Jump") || Input.GetAxis("JumpController") > 0) && canJumpAgain)
             {
                 float x = Input.GetAxisRaw("Horizontal");
                 float z = Input.GetAxisRaw("Vertical");
@@ -115,10 +118,12 @@ public class PlayerMovementRigidbody : MonoBehaviour
                 isWallRunningLeft = false;
                 isWallRunningRight = false;
                 canDash = true;
+
+                StartCoroutine(ResetJump());
             }
         }
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift) && !isWallRunning && canSlide)
+        if ((isGrounded && (Input.GetButton("Slide") || Input.GetAxis("SlideController") > 0) && !isWallRunning && canSlide))
         {
             capsuleCollider.height = 0.5f;
             capsuleCollider.center = new Vector3(0, 0.25f, 0);
@@ -126,30 +131,31 @@ public class PlayerMovementRigidbody : MonoBehaviour
             StartCoroutine(Sliding());
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && !isWallRunning && !isGrounded)
+        else if ((Input.GetButton("Slide") || Input.GetAxis("SlideController") > 0) && !isWallRunning && !isGrounded)
         {
             rbody.velocity = new Vector3(rbody.velocity.x, rbody.velocity.y - 60f * Time.deltaTime, rbody.velocity.z);
         }
 
-        if (Input.GetKeyDown(KeyCode.Q) && canDash && !isWallRunning)
+        if (Input.GetButton("DashLeft") && canDash && !isWallRunning)
         {
             if(canSlide) headCamera.SetBool("DashLeft", true);
             rbody.velocity = -transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
             StartCoroutine(Dashing("DashLeft"));
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && canDash && !isWallRunning)
+        if (Input.GetButton("DashRight") && canDash && !isWallRunning)
         {
             if (canSlide) headCamera.SetBool("DashRight", true);
             rbody.velocity = transform.right.normalized * dashForce + transform.forward.normalized * 1.5f + move;
             StartCoroutine(Dashing("DashRight"));
         }
 
-        if (bulletEnemyJumpBox.canJumpOffEnemy && !isGrounded && !isWallRunning && Input.GetButtonDown("Jump") && !justJumpedOffEnemy)
+        if (bulletEnemyJumpBox.canJumpOffEnemy && !isGrounded && !isWallRunning && (Input.GetButtonDown("Jump") || Input.GetAxis("JumpController") > 0) && !justJumpedOffEnemy && canJumpAgain)
         {
             ResetWallRun();
             rbody.velocity = transform.up * jumpOffEnemyUpForce;
             StartCoroutine(JustJumpedOffEnemy());
+            StartCoroutine(ResetJump());
         }
 
         if (isGrounded)
@@ -309,6 +315,13 @@ public class PlayerMovementRigidbody : MonoBehaviour
         justJumpedOffEnemy = true;
         yield return new WaitForSeconds(1f);
         justJumpedOffEnemy = false;
+    }
+
+    private IEnumerator ResetJump()
+    {
+        canJumpAgain = false;
+        yield return new WaitForSeconds(0.2f);
+        canJumpAgain = true;
     }
 }
 
