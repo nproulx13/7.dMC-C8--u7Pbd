@@ -54,8 +54,38 @@ public class Shiftable : MonoBehaviour
                 }
                 catch
                 {
-                    foreach(MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
-                    m.material = active;
+                    try
+                    {
+                        var meshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+                        if (meshes.Length == 0)
+                        {
+                            foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                            {
+                                m.material = active;
+                            }
+                        }
+                        else
+                        {
+                            if (GetComponent<Algro>() != null)
+                            {
+                                foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                                {
+                                    m.material = active;
+                                }
+                            }
+                            else
+                            {
+                                foreach (SkinnedMeshRenderer m in meshes)
+                                {
+                                    m.material = active;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
             else
@@ -66,8 +96,39 @@ public class Shiftable : MonoBehaviour
                 }
                 catch
                 {
-                    foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
-                        m.material = stopped;
+                    try
+                    {
+                        var meshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+                        if (meshes.Length == 0)
+                        {
+                            foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                            {
+                                m.material = stopped;
+                            }
+                        }
+                        else
+                        {
+                            if (GetComponent<Algro>() != null)
+                            {
+                                foreach (MeshRenderer m in GetComponentsInChildren<MeshRenderer>())
+                                {
+                                    m.material = stopped;
+                                }
+                            }
+                            else
+                            {
+                                foreach (SkinnedMeshRenderer m in meshes)
+                                {
+                                    m.material = stopped;
+                                }
+                            }
+                        }
+
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
 

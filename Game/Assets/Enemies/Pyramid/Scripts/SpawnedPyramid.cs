@@ -11,8 +11,9 @@ public class SpawnedPyramid : Controller
     private Rigidbody rbody;
     private float localTime;
     private float timeTillDestroy = 0;
-    private float timeToDestroy = 7f;
+    private float timeToDestroy = 5f;
     public bool frozen = false;
+    float counter = 0;
 
 
     public override void setTime(float f)
@@ -45,7 +46,7 @@ public class SpawnedPyramid : Controller
             rbody.isKinematic = false;
             rbody.velocity = velocity * localTime;
             timeTillDestroy += Time.deltaTime * localTime;
-            if (timeTillDestroy == timeToDestroy)
+            if (timeTillDestroy >= timeToDestroy)
             {
                 if (hitParticle != null) Instantiate(hitParticle);
                 Destroy(gameObject);
@@ -56,5 +57,13 @@ public class SpawnedPyramid : Controller
             rbody.velocity = Vector3.zero;
             rbody.isKinematic = true;
         }
+
+        transform.Rotate(Vector3.up * 200 * localTime * Time.deltaTime);
+        /*
+        if (localTime == 0) return;       
+        counter += localTime * Time.deltaTime;
+        counter %= 180;
+        float f = (localTime * Mathf.Abs(Mathf.Sin(counter)) * .3f) + 1f;
+        transform.localScale = new Vector3(f, f, f);*/
     }
 }

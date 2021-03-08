@@ -7,6 +7,7 @@ public class Dimond : Controller
     [SerializeField] private PlayerMovementRigidbody player;
     [SerializeField] private GameObject bullet;
     [SerializeField] private Transform shootBox;
+    private ParticleHolder particleHolder;
     public float bulletSpeed = 10f;
     private Vector3 position1;
     private Vector3 position2;
@@ -23,6 +24,7 @@ public class Dimond : Controller
 
     private void Awake()
     {
+        particleHolder = FindObjectOfType<ParticleHolder>();
         player = FindObjectOfType<PlayerMovementRigidbody>();
     }
 
@@ -72,6 +74,7 @@ public class Dimond : Controller
 
             Shiftable projectileTimeZone = bullet.GetComponent<Shiftable>();
             projectileTimeZone.timeZone = GetComponent<Shiftable>().timeZone;
+            spawnedBullet.GetComponent<DimondProjectile>().particleHolder = particleHolder;
 
             yield return new WaitForSeconds(durationBetweenShotsInSeconds);
             StartCoroutine(Shoot());

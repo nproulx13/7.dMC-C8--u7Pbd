@@ -49,6 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeZone: 0
+  active: {fileID: 2100000, guid: f6cdcb5a2fae26549857cb5d177cfe79, type: 2}
+  stopped: {fileID: 2100000, guid: 3485e02a20993fd48b9b527dd44e7fbc, type: 2}
 --- !u!54 &4974422634716976632
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -104,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a4bed1f63774d40a6cac54aed618c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isProjectile: 1
 --- !u!95 &4974422633597666890
 Animator:
   serializedVersion: 3

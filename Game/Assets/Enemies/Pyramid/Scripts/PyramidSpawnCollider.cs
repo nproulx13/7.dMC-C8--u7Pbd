@@ -22,11 +22,12 @@ public class PyramidSpawnCollider : MonoBehaviour
             //Debug.Log("<color=red>Dead</color>");
             Destroy(transform.parent.gameObject);
         }
-        else if (collision.gameObject != spawnedPyramid.parent && spawnedPyramid.frozen)
+
+        else if (collision.gameObject != spawnedPyramid.parent && !spawnedPyramid.frozen)
         {
             //Debug.Log("<color=yellow>Destroyed</color>");
-            if (spawnedPyramid.hitParticle!= null) Instantiate(spawnedPyramid.hitParticle);
-            Destroy(gameObject);
+            if (spawnedPyramid.hitParticle != null) Instantiate(spawnedPyramid.hitParticle);
+            Destroy(transform.parent.gameObject);
         }
 
     }

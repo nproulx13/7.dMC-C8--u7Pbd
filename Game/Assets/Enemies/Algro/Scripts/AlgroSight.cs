@@ -7,7 +7,7 @@ public class AlgroSight : MonoBehaviour
     public Algro a;
     private void OnTriggerEnter(Collider other)
     {
-        if (!a.occupied && other.tag == "Player")
+        if (!a.occupied && other.CompareTag("Player"))
         {
             a.player = other.gameObject;
             a.occupied = true;
@@ -16,7 +16,11 @@ public class AlgroSight : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (a.occupied && other.tag == "Player") a.occupied = false;
-        a.reload = a.reloadTime/2;
+
+        if (a.occupied && other.CompareTag("Player"))
+        {
+            a.occupied = false;
+            a.reload = a.reloadTime / 2;
+        }
     }
 }

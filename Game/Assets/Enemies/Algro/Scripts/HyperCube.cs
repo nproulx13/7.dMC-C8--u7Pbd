@@ -5,6 +5,7 @@ using UnityEngine;
 public class HyperCube : Controller
 {
     public GameObject targ;
+    [SerializeField] private GameObject hitParticle;
     public float burst = 2;
     public float speed = 25;
     public GameObject parent;
@@ -13,12 +14,15 @@ public class HyperCube : Controller
     private Vector3 offset;
     private Rigidbody rbody;
     public bool isTracking = true;
+    private bool frozen;
+    private float timeTillDestroy = 0;
+    private float timeToDestroy = 10f;
     [SerializeField] private HyperCubeAudio hyperCubeAudio;
 
     public override void setTime(float f)
     {
         localTime = f;
-        bool frozen = f == 0;
+        frozen = f == 0;
         if (frozen)
         {
             hyperCubeAudio.PlayHyperCubeInactive();
@@ -47,16 +51,34 @@ public class HyperCube : Controller
     {
         int tracking = isTracking ? 1 : 0;
         rbody.velocity *= localTime * tracking;
+        if (!frozen)
+        {
+            rbody.isKinematic = false;
+            timeTillDestroy += Time.deltaTime * localTime;
+            if (timeTillDestroy >= timeToDestroy)
+            {
+                if (hitParticle != null) Instantiate(hitParticle);
+                Destroy(gameObject);
+            }
+        }
+        else
+        {
+            rbody.velocity = Vector3.zero;
+            rbody.isKinematic = true;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") && localTime > 0)
         {
             //Debug.Log("<color=red>Dead</color>");
+            if (hitParticle != null) Instantiate(hitParticle);
+
         }
         else if (collision.gameObject != parent && localTime > 0 && collision.gameObject.layer != 9)
         {
             //Debug.Log("<color=yellow>Destroyed</color>");
+            if (hitParticle != null) Instantiate(hitParticle);
             Destroy(gameObject);
         }
     }

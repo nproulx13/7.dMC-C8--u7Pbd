@@ -221,8 +221,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeZone: 1
-  active: {fileID: 0}
-  stopped: {fileID: 0}
+  active: {fileID: 2100000, guid: 69f55db0dddf0dd47990c85ba32dd217, type: 2}
+  stopped: {fileID: 2100000, guid: 729e2bf9df565ae4a9acdf08bc708266, type: 2}
 --- !u!114 &6222505405577805309
 MonoBehaviour:
   m_ObjectHideFlags: 0

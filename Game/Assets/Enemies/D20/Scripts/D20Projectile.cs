@@ -56,7 +56,7 @@ public class D20Projectile : Controller
             rbody.isKinematic = false;
             rbody.velocity = velocity * localTime;
             timeTillDestroy += Time.deltaTime * localTime;
-            if (timeTillDestroy == timeToDestroy)
+            if (timeTillDestroy >= timeToDestroy)
             {
                 if (hitParticle != null) Instantiate(hitParticle);
                 Destroy(gameObject);

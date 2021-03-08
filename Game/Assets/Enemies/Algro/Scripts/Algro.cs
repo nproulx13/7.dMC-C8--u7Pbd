@@ -10,6 +10,7 @@ public class Algro : Controller
     public float reloadTime = 4f;
     public GameObject hyper;
     public GameObject player;
+    private float counter = 0;
     public override void setTime(float f)
     {
         localTime = f;
@@ -29,14 +30,13 @@ public class Algro : Controller
         reload = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (occupied)
+        if (occupied && reload>0)
         {
             reload -= Time.deltaTime * localTime;
         }
-        if (reload < 0)
+        if (reload <= 0)
         {
             reload = reloadTime;
             GameObject g = Instantiate(hyper,transform);
@@ -44,6 +44,12 @@ public class Algro : Controller
             g.GetComponent<HyperCube>().targ = player;
             g.GetComponent<HyperCube>().parent = gameObject;
         }
+
+        if (localTime == 0) return;
+        counter += localTime * Time.deltaTime;
+        counter %= 180;
+        float f = (localTime * Mathf.Abs(Mathf.Sin(counter)) * .15f) + 1f;
+        transform.localScale = new Vector3(f, f, f);
     }
 
 }

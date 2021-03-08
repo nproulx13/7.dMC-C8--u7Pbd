@@ -5,6 +5,8 @@ using UnityEngine;
 public class DimondProjectile : Controller
 {
     [SerializeField] private GameObject hitParticle;
+    [SerializeField] private GameObject trailPartice;
+    public ParticleHolder particleHolder;
     //[SerializeField] private Shiftable shiftable;
     public GameObject parent;
     private Vector3 velocity;
@@ -28,12 +30,30 @@ public class DimondProjectile : Controller
     {
         if(collision.gameObject.CompareTag("Player")&&!frozen)
         {
+            Vector3 scale = trailPartice.transform.localScale;
+            trailPartice.transform.SetParent(particleHolder.transform);
+            trailPartice.transform.localScale = scale;
+            trailPartice.GetComponent<ParticleDestoyer>().DestroyParticle();
+            if (hitParticle != null)
+            {
+                GameObject explosion = Instantiate(hitParticle, transform.position, Quaternion.identity);
+                explosion.GetComponent<ParticleDestoyer>().DestroyParticle(2f);
+            }
+            Destroy(gameObject);
             //Debug.Log("<color=red>Dead</color>");
         }
         else if(collision.gameObject!=parent && !frozen)
         {
             //Debug.Log("<color=yellow>Destroyed</color>");
-            if(hitParticle!=null) Instantiate(hitParticle);
+            Vector3 scale = trailPartice.transform.localScale;
+            trailPartice.transform.SetParent(particleHolder.transform);
+            trailPartice.transform.localScale = scale;
+            trailPartice.GetComponent<ParticleDestoyer>().DestroyParticle();
+            if (hitParticle != null)
+            {
+                GameObject explosion = Instantiate(hitParticle, transform.position, Quaternion.identity);
+                explosion.GetComponent<ParticleDestoyer>().DestroyParticle(2f);
+            }
             Destroy(gameObject);
         }
 
@@ -57,7 +77,7 @@ public class DimondProjectile : Controller
             rbody.isKinematic = false;
             rbody.velocity = velocity * localTime;
             timeTillDestroy += Time.deltaTime * localTime;
-            if (timeTillDestroy == timeToDestroy)
+            if (timeTillDestroy >= timeToDestroy)
             {
                 if (hitParticle != null) Instantiate(hitParticle);
                 Destroy(gameObject);
