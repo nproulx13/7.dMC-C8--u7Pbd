@@ -598,7 +598,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &769564987
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -669,12 +669,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 769564986}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 100, z: 2.5}
+  m_LocalScale: {x: 1.25, y: 1, z: 1.2499999}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_Father: {fileID: 1792311652}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &947640115
 GameObject:
@@ -1086,6 +1086,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cube (22)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e44876a1df7640c4ab4235868219d2fa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e44876a1df7640c4ab4235868219d2fa, type: 3}
 --- !u!1 &1687258581
@@ -1328,7 +1332,13 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 0.5226415, z: 0.7735987, w: 0}
+        m_Name: Color 2
+        m_Overridden: 0
+      - m_Value: {x: 1.4980392, y: 0.7921569, z: 0, w: 0}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -1353,7 +1363,8 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 100.00003, z: 2}
-  m_Children: []
+  m_Children:
+  - {fileID: 769564990}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
